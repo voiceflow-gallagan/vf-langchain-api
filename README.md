@@ -18,9 +18,9 @@ cp .env.example .env
 In the .env file, you will need to add your **OPENAI_API_KEY**.
 You can change the **SECRET** and the **PORT** values if you want to.
 
-### Installation
+### Installation (1st time)
 
   ```bash
-  npm run setup
+  npm run build
   ```
 

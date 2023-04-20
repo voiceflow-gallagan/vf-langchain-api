@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Voiceflow API for Langchain",
   "scripts": {
-    "setup": "./setup.sh"
+    "setup": "./build.sh"
   },
   "author": "Voiceflow | NiKo",
   "license": "ISC"

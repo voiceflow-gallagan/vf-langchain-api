@@ -2,7 +2,7 @@
 
 # Clone the Chroma repository if not already cloned
 if [ ! -d "chroma" ]; then
-  git clone git@github.com:chroma-core/chroma.git
+  git clone https://github.com/chroma-core/chroma.git
 fi
 
 # Run Docker Compose
