@@ -1,0 +1,10 @@
+{
+  "name": "voiceflow-langchain-api",
+  "version": "1.0.0",
+  "description": "Voiceflow API for Langchain",
+  "scripts": {
+    "setup": "./build.sh"
+  },
+  "author": "Voiceflow | NiKo",
+  "license": "ISC"
+}

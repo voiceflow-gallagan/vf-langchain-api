@@ -1,5 +1,5 @@
 {
-  "name": "voiceflow-langchain-demo",
+  "name": "voiceflow-langchain-api",
   "version": "1.0.0",
   "description": "Voiceflow API for Langchain",
   "main": "app.js",
