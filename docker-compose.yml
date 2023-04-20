@@ -1,0 +1,80 @@
+version: '3.9'
+
+services:
+  node_app:
+    build: ./node_app
+    container_name: node_app
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+      - "9229:9229"
+    environment:
+      - PORT=${PORT:-3000}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SECRET=${SECRET}
+    depends_on:
+      - redis
+      - chroma_server
+    command: node --inspect=0.0.0.0:9229 app.js
+    networks:
+      - app_net
+
+  redis:
+    image: 'redis:6.2-alpine'
+    container_name: redis
+    command: ["redis-server", "--bind", "redis", "--port", "6379"]
+    hostname: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - app_net
+
+  chroma_server:
+    build: ./chroma
+    container_name: chroma_server
+    volumes:
+      - ./chroma:/chroma
+      - ./.chroma:/chroma/.chroma
+      - index_data:/index_data
+    command: uvicorn chromadb.app:app --reload --workers 1 --host 0.0.0.0 --port 8000 --log-config log_config.yml
+    environment:
+      - CHROMA_DB_IMPL=clickhouse
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=8123
+    ports:
+      - 8000:8000
+    depends_on:
+      - clickhouse
+    networks:
+      - app_net
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:22.9-alpine
+    container_name: clickhouse
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - CLICKHOUSE_TCP_PORT=9000
+      - CLICKHOUSE_HTTP_PORT=8123
+    ports:
+      - '8123:8123'
+      - '9000:9000'
+    volumes:
+      - clickhouse_data:/bitnami/clickhouse
+      - backups:/backups
+      - ./chroma/config/backup_disk.xml:/etc/clickhouse-server/config.d/backup_disk.xml
+      - ./chroma/config/chroma_users.xml:/etc/clickhouse-server/users.d/chroma.xml
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    driver: bridge
+
+volumes:
+  clickhouse_data:
+    driver: local
+  index_data:
+    driver: local
+  backups:
+    driver: local
+  .chroma:
+    driver: local

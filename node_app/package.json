@@ -1,0 +1,25 @@
+{
+  "name": "voiceflow-langchain-demo",
+  "version": "1.0.0",
+  "description": "Voiceflow API for Langchain",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --no-warnings app.js"
+  },
+  "author": "Voiceflow | NiKo",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "cheerio": "^1.0.0-rc.12",
+    "chromadb": "^1.3.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.17.1",
+    "hnswlib-node": "^1.4.2",
+    "langchain": "^0.0.59",
+    "openai": "^3.2.1",
+    "pdfjs-dist": "^3.5.141",
+    "redis": "^4.6.5",
+    "sitemap-xml-parser": "^0.0.2"
+  }
+}
