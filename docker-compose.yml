@@ -34,9 +34,7 @@ services:
     hostname: chromadb
     volumes:
       - ./chroma:/chroma
-      - ./.chroma:/chroma/.chroma
-      - index_data:/index_data
-    command: uvicorn chromadb.app:app --reload --workers 1 --host 0.0.0.0 --port 8000 --log-config log_config.yml
+    command: uvicorn chromadb.app:app --reload --workers 2 --host 0.0.0.0 --port 8000 --log-config log_config.yml
     environment:
       - CHROMA_DB_IMPL=clickhouse
       - CLICKHOUSE_HOST=clickhouse
@@ -71,11 +69,8 @@ networks:
     driver: bridge
 
 volumes:
+  chroma:
   clickhouse_data:
     driver: local
-  index_data:
-    driver: local
   backups:
-    driver: local
-  .chroma:
     driver: local

@@ -1,4 +1,6 @@
 .chroma
+chroma
+.env
 
 # Logs
 logs
