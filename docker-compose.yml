@@ -13,7 +13,7 @@ services:
       - SECRET=${SECRET}
     depends_on:
       - redis
-      - chroma_server
+      - chromadb
     command: node --inspect=0.0.0.0:9229 app.js
     networks:
       - app_net
@@ -28,9 +28,10 @@ services:
     networks:
       - app_net
 
-  chroma_server:
+  chromadb:
     build: ./chroma
-    container_name: chroma_server
+    container_name: chromadb
+    hostname: chromadb
     volumes:
       - ./chroma:/chroma
       - ./.chroma:/chroma/.chroma
