@@ -50,7 +50,7 @@ client.on('ready', () => {
   console.log('Connected to Redis server.')
 })
 
-const cdb = new ChromaClient('http://chromadb:8000')
+const cdb = new ChromaClient(process.env.CHROMA_URL)
 /*
 const cdb = new ChromaClient('http://chroma_server:8000')
 
@@ -455,7 +455,7 @@ async function addURL(url, collection, chunkSize, chunkOverlap) {
   // Create a new document for the URL
   vectorStore = await Chroma.fromDocuments(docOutput, new OpenAIEmbeddings(), {
     collectionName: collection,
-    url: 'http://chromadb:8000',
+    url: process.env.CHROMA_URL,
   })
 
   console.log('Added!')
@@ -487,7 +487,7 @@ app.post('/api/doc', async (req, res) => {
   try {
     vectorStore = await Chroma.fromExistingCollection(new OpenAIEmbeddings(), {
       collectionName: collection,
-      url: 'http://chromadb:8000',
+      url: process.env.CHROMA_URL,
     })
   } catch (err) {
     console.log('Collection not found!')
