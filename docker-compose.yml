@@ -36,8 +36,8 @@ services:
     hostname: chromadb
     container_name: chroma
     volumes:
-      - ./chroma/:/chroma
-      - ./chroma/.cache:/index_data
+      - ./chroma:/chroma
+      - index_data:/index_data
     command: uvicorn chromadb.app:app --reload --workers 1 --host 0.0.0.0 --port 8000 --log-config log_config.yml
     environment:
       - CHROMA_DB_IMPL=clickhouse
