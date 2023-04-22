@@ -51,7 +51,6 @@ client.on('ready', () => {
 })
 
 const cdb = new ChromaClient('http://chromadb:8000')
-
 /*
 const cdb = new ChromaClient('http://chroma_server:8000')
 

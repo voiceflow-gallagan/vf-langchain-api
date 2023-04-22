@@ -13,10 +13,10 @@ services:
       - SECRET=${SECRET}
     depends_on:
       - redis
-      - chromadb
+      - server
     command: node --inspect=0.0.0.0:9229 app.js
     networks:
-      - app_net
+      - net
 
   redis:
     image: 'redis:6.2-alpine'
@@ -26,15 +26,18 @@ services:
     ports:
       - '6379:6379'
     networks:
-      - app_net
+      - net
 
-  chromadb:
-    build: ./chroma
-    container_name: chromadb
+  server:
+    build:
+      context: ./chroma
+      dockerfile: Dockerfile
     hostname: chromadb
+    container_name: chroma
     volumes:
-      - ./chroma:/chroma
-    command: uvicorn chromadb.app:app --reload --workers 2 --host 0.0.0.0 --port 8000 --log-config log_config.yml
+      - ./chroma/:/chroma
+      - index_data:/index_data
+    command: uvicorn chromadb.app:app --reload --workers 1 --host 0.0.0.0 --port 8000 --log-config log_config.yml
     environment:
       - CHROMA_DB_IMPL=clickhouse
       - CLICKHOUSE_HOST=clickhouse
@@ -44,7 +47,7 @@ services:
     depends_on:
       - clickhouse
     networks:
-      - app_net
+      - net
 
   clickhouse:
     image: clickhouse/clickhouse-server:22.9-alpine
@@ -53,24 +56,26 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
       - CLICKHOUSE_TCP_PORT=9000
       - CLICKHOUSE_HTTP_PORT=8123
-    ports:
-      - '8123:8123'
-      - '9000:9000'
     volumes:
       - clickhouse_data:/bitnami/clickhouse
       - backups:/backups
       - ./chroma/config/backup_disk.xml:/etc/clickhouse-server/config.d/backup_disk.xml
       - ./chroma/config/chroma_users.xml:/etc/clickhouse-server/users.d/chroma.xml
+    ports:
+      - '8123:8123'
+      - '9000:9000'
     networks:
-      - app_net
-
-networks:
-  app_net:
-    driver: bridge
+      - net
 
 volumes:
-  chroma:
   clickhouse_data:
+    driver: local
+  index_data:
     driver: local
   backups:
     driver: local
+
+networks:
+  net:
+    driver: bridge
+
